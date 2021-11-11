@@ -9,7 +9,10 @@
   <ItemGroup>
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />
+    <None Include="sandbox.fsx" />
   </ItemGroup>
+
+  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
