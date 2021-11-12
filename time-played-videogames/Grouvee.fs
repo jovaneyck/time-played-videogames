@@ -33,3 +33,7 @@ let parse (row: GrouveeCsv.Row) : GrouveeGame =
 let parseFile (path: string) : GrouveeGame list =
     let rows = GrouveeCsv.Load(path).Rows
     rows |> Seq.map parse |> Seq.toList
+
+let parseContents (contents: string) : GrouveeGame list =
+    let rows = GrouveeCsv.Parse(contents).Rows
+    rows |> Seq.map parse |> Seq.toList
