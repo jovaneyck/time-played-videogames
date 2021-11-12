@@ -24,3 +24,40 @@ let getHtml gameTitle : string =
     match response.Body with
     | Text t -> t
     | unhandled -> failwithf "Unhandled HLTB http response: %A" unhandled
+
+type SearchResult = { Title: string; PlayTime: decimal }
+
+let parsePlaytime (text: string) =
+    let number =
+        text.Split(" Hours").[0].Replace("½", ".5")
+
+    System.Decimal.Parse number
+
+let private parseSearchResultNode (node: HtmlNode) =
+    let search_list_details =
+        node
+        |> HtmlNode.descendants false (fun n -> n |> HtmlNode.hasClass "search_list_details")
+        |> Seq.head
+
+    let a =
+        search_list_details
+        |> HtmlNode.descendantsNamed false [ "a" ]
+        |> Seq.head
+
+    let title = a |> HtmlNode.innerText
+
+    let playtimeText =
+        search_list_details
+        |> HtmlNode.descendants false (fun n -> n |> HtmlNode.hasClass "search_list_tidbit")
+        |> Seq.map HtmlNode.innerText
+        |> Seq.item 3
+
+    let playtime = parsePlaytime playtimeText
+    { Title = title; PlayTime = playtime }
+
+let parseSearchResult html : SearchResult list =
+    html
+    |> HtmlDocument.Parse
+    |> HtmlDocument.descendantsNamed false [ "li" ]
+    |> Seq.map parseSearchResultNode
+    |> Seq.toList
