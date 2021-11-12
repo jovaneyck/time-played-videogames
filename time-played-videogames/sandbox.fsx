@@ -19,7 +19,9 @@ let csvContents =
 let rows = Grouvee.parseFile filepath
 let rows2 = Grouvee.parseContents csvContents
 
-let result = HowLongToBeat.getHtml "Darksiders III"
+let result =
+    HowLongToBeat.getHtml "Darksiders III"
+    |> Async.RunSynchronously
 
 let resultsFoundHtml =
     "
