@@ -3,6 +3,7 @@
 #r "nuget: FSharp.Data"
 
 #load "Grouvee.fs"
+#load "HowLongToBeat.fs"
 
 let filepath =
     @"C:\Users\Jo.VanEyck\source\repos\time-played-videogames\time-played-videogames\data\praGmatic_28044_grouvee_export.csv"
@@ -14,3 +15,5 @@ let csvContents =
 
 let rows = Grouvee.parseFile filepath
 let rows2 = Grouvee.parseContents csvContents
+
+HowLongToBeat.getHtml "Darksiders III"
