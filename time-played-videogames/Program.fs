@@ -7,7 +7,7 @@ let main argv =
 
     let finishedGames =
         games
-        |> List.filter (fun g -> g.Category = Grouvee.Category.Played)
+        |> List.filter (fun g -> g.Shelf = Grouvee.Shelf.Played)
 
     printfn "Wow, you completed %d games! You badass!" (finishedGames |> Seq.length)
     0

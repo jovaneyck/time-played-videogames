@@ -8,13 +8,13 @@ let url =
 
 type private GrouveeCsv = CsvProvider<url, ResolutionFolder=__SOURCE_DIRECTORY__>
 
-type Category =
+type Shelf =
     | Played
     | Playing
     | Backlog
     | Wishlist
 
-type GrouveeGame = { Title: string; Category: Category }
+type GrouveeGame = { Title: string; Shelf: Shelf }
 
 let parse (row: GrouveeCsv.Row) : GrouveeGame =
     let parseCategory =
@@ -28,7 +28,7 @@ let parse (row: GrouveeCsv.Row) : GrouveeGame =
     let title = row.Name
     let rawCategoryName = row.Shelves.Split([| '"' |]).[1]
     let category = parseCategory rawCategoryName
-    { Title = title; Category = category }
+    { Title = title; Shelf = category }
 
 let parseFile (path: string) : GrouveeGame list =
     let rows = GrouveeCsv.Load(path).Rows
