@@ -2,7 +2,9 @@
 
 open FSharp.Data
 
-let getHtml gameTitle : string =
+type SearchResponse = SearchResponse of string
+
+let getHtml gameTitle : SearchResponse =
     let headers = [ ("User-Agent", "scraper") ]
     //"queryString=darksiders%20III&t=games&sorthead=popular&sortd=0&plat=&length_type=main&length_min=&length_max=&v=&f=&g=&detail=&randomize=0"
     let body =
@@ -22,7 +24,7 @@ let getHtml gameTitle : string =
         )
 
     match response.Body with
-    | Text t -> t
+    | Text t -> SearchResponse t
     | unhandled -> failwithf "Unhandled HLTB http response: %A" unhandled
 
 type SearchResult = { Title: string; PlayTime: decimal }
@@ -55,7 +57,7 @@ let private parseSearchResultNode (node: HtmlNode) =
     let playtime = parsePlaytime playtimeText
     { Title = title; PlayTime = playtime }
 
-let parseSearchResult html : SearchResult list =
+let parseSearchResult (SearchResponse html) : SearchResult list =
     html
     |> HtmlDocument.Parse
     |> HtmlDocument.descendantsNamed false [ "li" ]

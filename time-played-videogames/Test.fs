@@ -17,6 +17,8 @@ module GrouveeParsingTests =
                            Shelf = Grouvee.Shelf.Played } ] @>
 
 module HLTBTests =
+    open HowLongToBeat
+
     [<Fact>]
     let ``Parsing HLTB playtime text`` () =
         test <@ HowLongToBeat.parsePlaytime "18 Hours " = 18m @>
@@ -78,9 +80,10 @@ module HLTBTests =
     			</ul> "
 
         test
-            <@ HowLongToBeat.parseSearchResult html = [ { Title = "Darksiders III"
-                                                          PlayTime = 18.5M }
-                                                        { Title = "Darksiders III - The Crucible"
-                                                          PlayTime = 1.5M }
-                                                        { Title = "Darksiders III - Keepers of the Void"
-                                                          PlayTime = 4M } ] @>
+            <@ HowLongToBeat.parseSearchResult (SearchResponse html) = [ { Title = "Darksiders III"
+                                                                           PlayTime = 18.5M }
+                                                                         { Title = "Darksiders III - The Crucible"
+                                                                           PlayTime = 1.5M }
+                                                                         { Title =
+                                                                               "Darksiders III - Keepers of the Void"
+                                                                           PlayTime = 4M } ] @>
