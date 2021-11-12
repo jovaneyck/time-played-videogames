@@ -81,9 +81,18 @@ module HLTBTests =
 
         test
             <@ HowLongToBeat.parseSearchResult (SearchResponse html) = [ { Title = "Darksiders III"
-                                                                           PlayTime = 18.5M }
+                                                                           PlayTimes =
+                                                                               [ (MainStory, 14M)
+                                                                                 (MainExtras, 18.5M)
+                                                                                 (Completionist, 30M) ] }
                                                                          { Title = "Darksiders III - The Crucible"
-                                                                           PlayTime = 1.5M }
+                                                                           PlayTimes =
+                                                                               [ (MainStory, 1.5M)
+                                                                                 (MainExtras, 1.5M)
+                                                                                 (Completionist, 2M) ] }
                                                                          { Title =
                                                                                "Darksiders III - Keepers of the Void"
-                                                                           PlayTime = 4M } ] @>
+                                                                           PlayTimes =
+                                                                               [ (MainStory, 4M)
+                                                                                 (MainExtras, 4M)
+                                                                                 (Completionist, 4.5M) ] } ] @>

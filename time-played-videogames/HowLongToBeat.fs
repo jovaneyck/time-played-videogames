@@ -27,13 +27,45 @@ let getHtml gameTitle : SearchResponse =
     | Text t -> SearchResponse t
     | unhandled -> failwithf "Unhandled HLTB http response: %A" unhandled
 
-type SearchResult = { Title: string; PlayTime: decimal }
+type Category =
+    | MainStory
+    | MainExtras
+    | Completionist
+
+type Playtime = (Category * decimal)
+
+type SearchResult =
+    { Title: string
+      PlayTimes: Playtime list }
 
 let parsePlaytime (text: string) =
     let number =
         text.Split(" Hours").[0].Replace("½", ".5")
 
     System.Decimal.Parse number
+
+let parseCategory =
+    function
+    | "Main Story" -> MainStory
+    | "Main + Extra" -> MainExtras
+    | "Completionist" -> Completionist
+    | invalid -> failwithf "Unknown category: %s" invalid
+
+let private parsePlaytimeDiv (divs: HtmlNode list) : Playtime =
+    match divs with
+    | categoryDiv :: playtimeDiv :: [] ->
+        let category =
+            categoryDiv |> HtmlNode.innerText |> parseCategory
+
+        let playtime =
+            playtimeDiv |> HtmlNode.innerText |> parsePlaytime
+
+        category, playtime
+
+    | invalid ->
+        failwithf
+            "I expected 2 divs, one containing the category, the other containing the playtime. Instead I got: %A"
+            invalid
 
 let private parseSearchResultNode (node: HtmlNode) =
     let search_list_details =
@@ -48,14 +80,17 @@ let private parseSearchResultNode (node: HtmlNode) =
 
     let title = a |> HtmlNode.innerText
 
-    let playtimeText =
+    let playtimeDivs =
         search_list_details
         |> HtmlNode.descendants false (fun n -> n |> HtmlNode.hasClass "search_list_tidbit")
-        |> Seq.map HtmlNode.innerText
-        |> Seq.item 3
+        |> Seq.chunkBySize 2
 
-    let playtime = parsePlaytime playtimeText
-    { Title = title; PlayTime = playtime }
+    let playtimes =
+        playtimeDivs
+        |> Seq.toList
+        |> List.map (List.ofArray >> parsePlaytimeDiv)
+
+    { Title = title; PlayTimes = playtimes }
 
 let parseSearchResult (SearchResponse html) : SearchResult list =
     html
