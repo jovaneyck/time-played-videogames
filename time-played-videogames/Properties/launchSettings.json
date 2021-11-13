@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "time-played-videogames": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Jo.VanEyck\\source\\repos\\time-played-videogames\\time-played-videogames\\data\\praGmatic_28044_grouvee_export.csv"
+    }
+  }
+}

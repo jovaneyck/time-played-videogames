@@ -77,8 +77,3 @@ let resultsFoundHtml =
 			</ul> "
 
 HowLongToBeat.parseSearchResult (HowLongToBeat.SearchResponse resultsFoundHtml)
-
-test <@ HowLongToBeat.parsePlaytime "18 Hours " = 18m @>
-test <@ HowLongToBeat.parsePlaytime "18½ Hours " = 18.5m @>
-
-[ 1 .. 10 ] |> List.chunkBySize 2

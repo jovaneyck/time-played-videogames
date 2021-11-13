@@ -38,17 +38,20 @@ type Category =
     | MainExtras
     | Completionist
 
-type Playtime = (Category * decimal)
+type Playtime = (Category * decimal option)
 
 type SearchResult =
     { Title: string
       PlayTimes: Playtime list }
 
-let parsePlaytime (text: string) =
-    let number =
-        text.Split(" Hours").[0].Replace("½", ".5")
+let parsePlaytime (text: string) : decimal option =
+    if text = "--" then
+        None
+    else
+        let number =
+            text.Split(" Hours").[0].Replace("½", ".5")
 
-    System.Decimal.Parse number
+        number |> System.Decimal.Parse |> Some
 
 let parseCategory =
     function

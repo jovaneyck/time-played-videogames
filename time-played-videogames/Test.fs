@@ -21,8 +21,9 @@ module HLTBTests =
 
     [<Fact>]
     let ``Parsing HLTB playtime text`` () =
-        test <@ HowLongToBeat.parsePlaytime "18 Hours " = 18m @>
-        test <@ HowLongToBeat.parsePlaytime "18½ Hours " = 18.5m @>
+        test <@ HowLongToBeat.parsePlaytime "18 Hours " = Some 18m @>
+        test <@ HowLongToBeat.parsePlaytime "18½ Hours " = Some 18.5m @>
+        test <@ HowLongToBeat.parsePlaytime "--" = None @>
 
     [<Fact>]
     let ``Parsing HLTB responses with actual results`` () =
@@ -82,17 +83,62 @@ module HLTBTests =
         test
             <@ HowLongToBeat.parseSearchResult (SearchResponse html) = [ { Title = "Darksiders III"
                                                                            PlayTimes =
-                                                                               [ (MainStory, 14M)
-                                                                                 (MainExtras, 18.5M)
-                                                                                 (Completionist, 30M) ] }
+                                                                               [ (MainStory, Some 14M)
+                                                                                 (MainExtras, Some 18.5M)
+                                                                                 (Completionist, Some 30M) ] }
                                                                          { Title = "Darksiders III - The Crucible"
                                                                            PlayTimes =
-                                                                               [ (MainStory, 1.5M)
-                                                                                 (MainExtras, 1.5M)
-                                                                                 (Completionist, 2M) ] }
+                                                                               [ (MainStory, Some 1.5M)
+                                                                                 (MainExtras, Some 1.5M)
+                                                                                 (Completionist, Some 2M) ] }
                                                                          { Title =
                                                                                "Darksiders III - Keepers of the Void"
                                                                            PlayTimes =
-                                                                               [ (MainStory, 4M)
-                                                                                 (MainExtras, 4M)
-                                                                                 (Completionist, 4.5M) ] } ] @>
+                                                                               [ (MainStory, Some 4M)
+                                                                                 (MainExtras, Some 4M)
+                                                                                 (Completionist, Some 4.5M) ] } ] @>
+
+    [<Fact>]
+    let ``Parsing HLTB responses with empty playtimes`` () =
+        let html =
+            "<div class=\"global_padding shadow_box back_blue center\">
+            <h3> We Found 4 Games for \"zelda: breath of the wild\" </h3>
+            </div>
+
+            <ul>
+                <div class=\"clear\"></div>
+                <li class=\"back_darkish\"
+                    style=\"background-image:linear-gradient(rgb(31, 31, 31), rgba(31, 31, 31, 0.9)), url('/games/no_boxart.png')\">
+                    <div class=\"search_list_image\">
+                        <a aria-label=\"The Legend of Zelda Breath of the Wild 2\" title=\"The Legend of Zelda Breath of the Wild 2\"
+                            href=\"game?id=72589\">
+                            <img alt=\"Box Art\" src=\"/games/no_boxart.png\" />
+                        </a>
+                    </div>
+                    <div class=\"search_list_details\">
+                        <h3 class=\"shadow_text\">
+                            <a class=\"text_white\" title=\"The Legend of Zelda Breath of the Wild 2\" href=\"game?id=72589\">The Legend
+                                of Zelda: Breath of the Wild 2</a>
+                        </h3>
+                        <div class=\"search_list_details_block\">
+                            <div>
+                                <div class=\"search_list_tidbit text_white shadow_text\">Main Story</div>
+                                <div class=\"search_list_tidbit center time_00\">--</div>
+                                <div class=\"search_list_tidbit text_white shadow_text\">Main + Extra</div>
+                                <div class=\"search_list_tidbit center time_00\">--</div>
+                                <div class=\"search_list_tidbit text_white shadow_text\">Completionist</div>
+                                <div class=\"search_list_tidbit center time_00\">--</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <div class=\"clear\"></div>
+            </ul>"
+
+        test
+            <@ HowLongToBeat.parseSearchResult (SearchResponse html) = [ { Title =
+                                                                               "The Legend of Zelda: Breath of the Wild 2"
+                                                                           PlayTimes =
+                                                                               [ (MainStory, None)
+                                                                                 (MainExtras, None)
+                                                                                 (Completionist, None) ] } ] @>
