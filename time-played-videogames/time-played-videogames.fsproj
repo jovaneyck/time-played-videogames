@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Data" Version="4.2.5" />
+    <PackageReference Include="FSharpx.Async" Version="1.14.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Unquote" Version="6.1.0" />
     <PackageReference Include="XUnit" Version="2.4.1" />

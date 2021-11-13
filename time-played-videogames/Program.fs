@@ -1,24 +1,26 @@
 ﻿module Main
 
+open FSharpx.Control
+
 [<EntryPoint>]
 let main argv =
-    async {
-        let grouveeCsvPath = argv.[0]
-        let games = Grouvee.parseFile grouveeCsvPath
+    let grouveeCsvPath = argv.[0]
+    let games = Grouvee.parseFile grouveeCsvPath
 
-        let finishedGames =
-            games
-            |> List.filter (fun g -> g.Shelf = Grouvee.Shelf.Played)
+    let finishedGames =
+        games
+        |> List.filter (fun g -> g.Shelf = Grouvee.Shelf.Played)
 
-        let first = finishedGames |> Seq.item 1
+    let responses =
+        finishedGames
+        |> List.map
+            (fun game ->
+                printfn "Querying HLTB for %s" game.Title
+                let result = game.Title |> HowLongToBeat.getHtml
+                printfn "Finished querying HLTB for %s" game.Title
+                result)
+        |> Async.ParallelWithThrottle 10
+        |> Async.RunSynchronously
 
-        let! html = first.Title |> HowLongToBeat.getHtml
-        let searchResult = html |> HowLongToBeat.parseSearchResult
-
-
-        printfn "Search result: %A" searchResult
-
-        printfn "Wow, you completed %d games! You badass!" (finishedGames |> Seq.length)
-        return 0
-    }
-    |> Async.RunSynchronously
+    printfn "Wow, you completed %d games! You badass!" (finishedGames |> Seq.length)
+    0
