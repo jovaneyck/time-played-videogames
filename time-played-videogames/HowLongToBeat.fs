@@ -47,22 +47,25 @@ type SearchResult =
 let parsePlaytime (text: string) : decimal option =
     printfn "Parsing: %s" text
 
-    if text = "--" then
-        None
-    else if text.Contains("Hours") then
+    let parseHours (text: string) =
         let number =
             text.Split(" Hours").[0].Replace("½", ".5")
 
         number |> System.Decimal.Parse |> Some
-    else if text.Contains("Mins") then
+
+    let parseMinutes (text: string) =
         let number = text.Split(" Mins").[0]
 
         number
         |> System.Decimal.Parse
         |> (fun n -> n / 60m)
         |> Some
-    else
-        failwithf "Unrecognized play time format: %s" text
+
+    match text with
+    | "--" -> None
+    | hours when text.Contains("Hours") -> parseHours text
+    | minutes when text.Contains("Mins") -> parseMinutes text
+    | unknown -> failwithf "Unrecognized play time format: %s" text
 
 let parseCategory =
     function
