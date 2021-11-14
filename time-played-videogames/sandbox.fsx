@@ -22,7 +22,6 @@ let finishedGames =
 
 finishedGames |> Seq.length
 
-
 let cleanWith whitelist title =
     whitelist
     |> Map.tryFind title
@@ -38,7 +37,11 @@ let clean title =
           ("Pokémon Gold/Silver", "Pokémon Gold and Silver")
           ("Pokémon Sword/Shield", "Pokémon Sword and Shield")
           ("Pokémon Red/Blue", "Pokémon Red and Blue")
-          ("Phoenix Wright: Ace Attorney – Spirit of Justice", "Phoenix Wright: Ace Attorney Spirit of Justice") ]
+          ("Phoenix Wright: Ace Attorney – Spirit of Justice", "Phoenix Wright: Ace Attorney Spirit of Justice")
+          ("The Walking Dead: Season Two", "The Walking Dead: Season 2")
+          ("Xenoblade Chronicles 2: Torna - The Golden Country", "Xenoblade Chronicles 2: Torna ~ The Golden Country")
+          ("Mario + Rabbids: Kingdom Battle", "Mario + Rabbids Kingdom Battle")
+          ("Abzû", "ABZU") ]
         |> Map.ofList
 
     cleanWith whitelist title
