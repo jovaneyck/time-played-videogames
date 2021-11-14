@@ -30,12 +30,22 @@ let responses =
                 printfn "Querying HLTB for %s" game.Title
                 let! result = game.Title |> HowLongToBeatHttp.getHtml
                 printfn "Finished querying HLTB for %s" game.Title
-                return result
+                return game, result
             })
     |> Async.ParallelWithThrottle 10
     |> Async.RunSynchronously
 
 let parsed =
     responses
-    |> Seq.map HowLongToBeatParsing.parseSearchResult
+    |> Seq.map (fun (req, resp) -> req, HowLongToBeatParsing.parseSearchResult resp)
     |> Seq.toList
+
+let findMatch
+    (
+        request: Grouvee.GrouveeGame,
+        searchResponses: HowLongToBeatParsing.SearchResult list
+    ) : HowLongToBeatParsing.SearchResult =
+    searchResponses.[0]
+
+let game = parsed.[0]
+findMatch game

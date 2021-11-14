@@ -2,9 +2,9 @@
 
 open FSharp.Data
 
-type SearchResponse = SearchResponse of string
+type HttpSearchResponse = HttpSearchResponse of string
 
-let getHtml gameTitle : Async<SearchResponse> =
+let getHtml gameTitle : Async<HttpSearchResponse> =
     async {
 
         let headers = [ ("User-Agent", "scraper") ]
@@ -27,7 +27,7 @@ let getHtml gameTitle : Async<SearchResponse> =
 
         let response =
             match response.Body with
-            | Text t -> SearchResponse t
+            | Text t -> HttpSearchResponse t
             | unhandled -> failwithf "Unhandled HLTB http response: %A" unhandled
 
         return response

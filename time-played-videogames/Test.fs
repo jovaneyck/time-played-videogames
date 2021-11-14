@@ -88,22 +88,23 @@ module HLTBTests =
     			</ul> "
 
         test
-            <@ parseSearchResult (HowLongToBeatHttp.SearchResponse html) = [ { Title = "Darksiders III"
-                                                                               PlayTimes =
-                                                                                   [ (MainStory, Some 14M)
-                                                                                     (MainExtras, Some 18.5M)
-                                                                                     (Completionist, Some 30M) ] }
-                                                                             { Title = "Darksiders III - The Crucible"
-                                                                               PlayTimes =
-                                                                                   [ (MainStory, Some 1.5M)
-                                                                                     (MainExtras, Some 1.5M)
-                                                                                     (Completionist, Some 2M) ] }
-                                                                             { Title =
-                                                                                   "Darksiders III - Keepers of the Void"
-                                                                               PlayTimes =
-                                                                                   [ (MainStory, Some 4M)
-                                                                                     (MainExtras, Some 4M)
-                                                                                     (Completionist, Some 4.5M) ] } ] @>
+            <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [ { Title = "Darksiders III"
+                                                                                   PlayTimes =
+                                                                                       [ (MainStory, Some 14M)
+                                                                                         (MainExtras, Some 18.5M)
+                                                                                         (Completionist, Some 30M) ] }
+                                                                                 { Title =
+                                                                                       "Darksiders III - The Crucible"
+                                                                                   PlayTimes =
+                                                                                       [ (MainStory, Some 1.5M)
+                                                                                         (MainExtras, Some 1.5M)
+                                                                                         (Completionist, Some 2M) ] }
+                                                                                 { Title =
+                                                                                       "Darksiders III - Keepers of the Void"
+                                                                                   PlayTimes =
+                                                                                       [ (MainStory, Some 4M)
+                                                                                         (MainExtras, Some 4M)
+                                                                                         (Completionist, Some 4.5M) ] } ] @>
 
     [<Fact>]
     let ``Parsing HLTB responses with empty playtimes`` () =
@@ -143,12 +144,12 @@ module HLTBTests =
             </ul>"
 
         test
-            <@ parseSearchResult (HowLongToBeatHttp.SearchResponse html) = [ { Title =
-                                                                                   "The Legend of Zelda: Breath of the Wild 2"
-                                                                               PlayTimes =
-                                                                                   [ (MainStory, None)
-                                                                                     (MainExtras, None)
-                                                                                     (Completionist, None) ] } ] @>
+            <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [ { Title =
+                                                                                       "The Legend of Zelda: Breath of the Wild 2"
+                                                                                   PlayTimes =
+                                                                                       [ (MainStory, None)
+                                                                                         (MainExtras, None)
+                                                                                         (Completionist, None) ] } ] @>
 
     [<Fact>]
     let ``Parsing HLTB responses with no results for a game`` () =
@@ -157,4 +158,4 @@ module HLTBTests =
             Pikachu!/Eevee!</strong> in <u>games</u>.</li>
             <div class='clear'></div>"
 
-        test <@ parseSearchResult (HowLongToBeatHttp.SearchResponse html) = [] @>
+        test <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [] @>

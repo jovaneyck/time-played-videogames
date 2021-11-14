@@ -85,7 +85,7 @@ let private parseSearchResultNode (node: HtmlNode) =
 
     { Title = title; PlayTimes = playtimes }
 
-let parseSearchResult (HowLongToBeatHttp.SearchResponse html) : SearchResult list =
+let parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) : SearchResult list =
     if html.Contains("No results for ") then
         []
     else
