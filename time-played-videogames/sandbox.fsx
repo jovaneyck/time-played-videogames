@@ -4,7 +4,8 @@
 #r "nuget: FSharpx.Async"
 
 #load "Grouvee.fs"
-#load "HowLongToBeat.fs"
+#load "HowLongToBeatHttp.fs"
+#load "HowLongToBeatParsing.fs"
 
 open FSharp.Data
 open Swensen.Unquote
@@ -27,7 +28,7 @@ let responses =
         (fun game ->
             async {
                 printfn "Querying HLTB for %s" game.Title
-                let! result = game.Title |> HowLongToBeat.getHtml
+                let! result = game.Title |> HowLongToBeatHttp.getHtml
                 printfn "Finished querying HLTB for %s" game.Title
                 return result
             })
@@ -36,5 +37,5 @@ let responses =
 
 let parsed =
     responses
-    |> Seq.map HowLongToBeat.parseSearchResult
+    |> Seq.map HowLongToBeatParsing.parseSearchResult
     |> Seq.toList

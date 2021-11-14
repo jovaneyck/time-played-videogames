@@ -9,7 +9,8 @@
   <ItemGroup>
     <None Include="data\praGmatic_28044_grouvee_export.csv" />
     <Compile Include="Grouvee.fs" />
-    <Compile Include="HowLongToBeat.fs" />
+    <Compile Include="HowLongToBeatHttp.fs" />
+    <Compile Include="HowLongToBeatParsing.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />
     <None Include="sandbox.fsx" />

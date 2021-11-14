@@ -17,7 +17,7 @@ let main argv =
             (fun game ->
                 async {
                     printfn "Querying HLTB for %s" game.Title
-                    let! result = game.Title |> HowLongToBeat.getHtml
+                    let! result = game.Title |> HowLongToBeatHttp.getHtml
                     printfn "Finished querying HLTB for %s" game.Title
                     return result
                 })
@@ -26,7 +26,7 @@ let main argv =
 
     let parsed =
         responses
-        |> Seq.map HowLongToBeat.parseSearchResult
+        |> Seq.map HowLongToBeatParsing.parseSearchResult
         |> Seq.toList
 
     printfn "Wow, you completed %d games! You badass!" (finishedGames |> Seq.length)
