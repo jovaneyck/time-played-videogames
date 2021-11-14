@@ -117,8 +117,11 @@ let private parseSearchResultNode (node: HtmlNode) =
     { Title = title; PlayTimes = playtimes }
 
 let parseSearchResult (SearchResponse html) : SearchResult list =
-    html
-    |> HtmlDocument.Parse
-    |> HtmlDocument.descendantsNamed false [ "li" ]
-    |> Seq.map parseSearchResultNode
-    |> Seq.toList
+    if html.Contains("No results for ") then
+        []
+    else
+        html
+        |> HtmlDocument.Parse
+        |> HtmlDocument.descendantsNamed false [ "li" ]
+        |> Seq.map parseSearchResultNode
+        |> Seq.toList

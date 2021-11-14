@@ -7,6 +7,10 @@ let main argv =
     let grouveeCsvPath = argv.[0]
     let games = Grouvee.parseFile grouveeCsvPath
 
+    let finishedGames =
+        games
+        |> List.filter (fun g -> g.Shelf = Grouvee.Shelf.Played)
+
     let responses =
         finishedGames
         |> List.map

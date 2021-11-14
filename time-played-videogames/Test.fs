@@ -150,3 +150,12 @@ module HLTBTests =
                                                                                [ (MainStory, None)
                                                                                  (MainExtras, None)
                                                                                  (Completionist, None) ] } ] @>
+
+    [<Fact>]
+    let ``Parsing HLTB responses with no results for a game`` () =
+        let html =
+            "<li class='global_padding back_primary shadow_box'>No results for <strong>Pok&eacute;mon: Let's Go,
+            Pikachu!/Eevee!</strong> in <u>games</u>.</li>
+            <div class='clear'></div>"
+
+        test <@ HowLongToBeat.parseSearchResult (SearchResponse html) = [] @>
