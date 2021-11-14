@@ -20,9 +20,17 @@ module HLTBTests =
     open HowLongToBeat
 
     [<Fact>]
-    let ``Parsing HLTB playtime text`` () =
+    let ``Parsing HLTB playtime text in hours`` () =
         test <@ HowLongToBeat.parsePlaytime "18 Hours " = Some 18m @>
         test <@ HowLongToBeat.parsePlaytime "18½ Hours " = Some 18.5m @>
+
+    [<Fact>]
+    let ``Parsing HLTB playtime text in minutes`` () =
+        test <@ HowLongToBeat.parsePlaytime "15 Mins " = Some 0.25m @>
+        test <@ HowLongToBeat.parsePlaytime "30 Mins " = Some 0.5m @>
+
+    [<Fact>]
+    let ``Parsing HLTB playtime text missing data`` () =
         test <@ HowLongToBeat.parsePlaytime "--" = None @>
 
     [<Fact>]

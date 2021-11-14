@@ -45,13 +45,24 @@ type SearchResult =
       PlayTimes: Playtime list }
 
 let parsePlaytime (text: string) : decimal option =
+    printfn "Parsing: %s" text
+
     if text = "--" then
         None
-    else
+    else if text.Contains("Hours") then
         let number =
             text.Split(" Hours").[0].Replace("½", ".5")
 
         number |> System.Decimal.Parse |> Some
+    else if text.Contains("Mins") then
+        let number = text.Split(" Mins").[0]
+
+        number
+        |> System.Decimal.Parse
+        |> (fun n -> n / 60m)
+        |> Some
+    else
+        failwithf "Unrecognized play time format: %s" text
 
 let parseCategory =
     function
@@ -88,6 +99,7 @@ let private parseSearchResultNode (node: HtmlNode) =
         |> Seq.head
 
     let title = a |> HtmlNode.innerText
+    printfn "Parsing: %s" title
 
     let playtimeDivs =
         search_list_details
