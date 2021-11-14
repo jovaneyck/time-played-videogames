@@ -27,7 +27,16 @@ let cleanWith whitelist title =
     |> Map.tryFind title
     |> Option.defaultValue title
 
-let clean title =
+let clean (title: string) =
+    //title
+    //    .Replace("/", " ")
+    //    .Replace(" III", " 3")
+    //    .Replace(" II", " 2")
+    //    .Replace("•", "  ")
+    //    .Replace(" – ", "  ")
+    //    .Replace("û", "u")
+    //    .Replace(":", " ")
+
     let whitelist =
         [ ("Pokémon: Let's Go, Pikachu!/Eevee!", "Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!")
           ("Pokémon X/Y", "Pokémon X and Y")
@@ -87,12 +96,9 @@ let findMatch
 
     closestMatch
 
-//let game =
-//    parsed
-//    |> List.find (fun (r, resp) -> r.Title.Contains("Eevee"))
 parsed |> List.map findMatch
 
 //TODO: matching edge cases
 //Pokemon x/y
 //Doom 93/2016
-//RDRII
+//RDRII fails BUT FFXIII, Ni no Kuni II: Revenant Kingdom fails with digits instead of roman numerals
