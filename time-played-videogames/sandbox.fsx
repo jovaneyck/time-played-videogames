@@ -22,13 +22,39 @@ let finishedGames =
 
 finishedGames |> Seq.length
 
+
+let cleanWith whitelist title =
+    whitelist
+    |> Map.tryFind title
+    |> Option.defaultValue title
+
+let clean title =
+    let whitelist =
+        [ ("Pokémon: Let's Go, Pikachu!/Eevee!", "Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!")
+          ("Pokémon X/Y", "Pokémon X and Y")
+          ("Pokémon Sword/Shield", "Pokémon Sword and Shield")
+          ("Red Dead Redemption II", "Red Dead Redemption 2")
+          ("Danganronpa 1•2 Reload", "Danganronpa 1 & 2 Reload")
+          ("Pokémon Gold/Silver", "Pokémon Gold and Silver")
+          ("Pokémon Sword/Shield", "Pokémon Sword and Shield")
+          ("Pokémon Red/Blue", "Pokémon Red and Blue")
+          ("Phoenix Wright: Ace Attorney – Spirit of Justice", "Phoenix Wright: Ace Attorney Spirit of Justice") ]
+        |> Map.ofList
+
+    cleanWith whitelist title
+
+let mapOf l = l |> Map.ofList
+
+test <@ cleanWith (mapOf [ ("dirty", "clean") ]) ":clean:title:" = ":clean:title:" @>
+test <@ cleanWith (mapOf [ ("dirty", "clean!") ]) "dirty" = "clean!" @>
+
 let responses =
     finishedGames
     |> List.map
         (fun game ->
             async {
                 printfn "Querying HLTB for %s" game.Title
-                let! result = game.Title |> HowLongToBeatHttp.getHtml
+                let! result = game.Title |> clean |> HowLongToBeatHttp.getHtml
                 printfn "Finished querying HLTB for %s" game.Title
                 return game, result
             })
@@ -45,7 +71,25 @@ let findMatch
         request: Grouvee.GrouveeGame,
         searchResponses: HowLongToBeatParsing.SearchResult list
     ) : HowLongToBeatParsing.SearchResult =
-    searchResponses.[0]
 
-let game = parsed.[0]
-findMatch game
+    printfn "Looking for a match for %s" request.Title
+
+    printfn
+        "Candidates: %A"
+        (searchResponses
+         |> Seq.map (fun r -> r.Title |> clean))
+
+    let closestMatch = searchResponses.[0]
+    printfn "Closest match (probably?): %s" closestMatch.Title
+
+    closestMatch
+
+//let game =
+//    parsed
+//    |> List.find (fun (r, resp) -> r.Title.Contains("Eevee"))
+parsed |> List.map findMatch
+
+//TODO: matching edge cases
+//Pokemon x/y
+//Doom 93/2016
+//RDRII
