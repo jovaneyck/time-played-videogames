@@ -170,3 +170,41 @@ module ScrubbingTests =
     [<Fact>]
     let ``Leaves already clean titles intact`` () =
         test <@ Matcher.cleanWith (mapOf [ ("dirty", "clean") ]) ":clean:title:" = ":clean:title:" @>
+
+module TallyTests =
+    open HowLongToBeatParsing
+    open Tally
+
+    [<Fact>]
+    let ``Can tally up an empty`` () =
+        test
+            <@ tally [] = { MainStory = 0m
+                            MainExtras = 0m
+                            Completionist = 0m } @>
+
+    [<Fact>]
+    let ``Can tally up a collection consisting of a single game`` () =
+        test
+            <@ tally [ { Title = ":a:game:"
+                         PlayTimes =
+                             [ (MainStory, Some 1m)
+                               (MainExtras, Some 2m)
+                               (Completionist, Some 3m) ] } ] = { MainStory = 1m
+                                                                  MainExtras = 2m
+                                                                  Completionist = 3m } @>
+
+    [<Fact>]
+    let ``Can tally up a collection consisting of multiple games`` () =
+        test
+            <@ tally [ { Title = ":a:game:"
+                         PlayTimes =
+                             [ (MainStory, Some 1m)
+                               (MainExtras, Some 2m)
+                               (Completionist, Some 3m) ] }
+                       { Title = ":another:game:"
+                         PlayTimes =
+                             [ (MainStory, Some 100m)
+                               (MainExtras, Some 200m)
+                               (Completionist, Some 300m) ] } ] = { MainStory = 101m
+                                                                    MainExtras = 202m
+                                                                    Completionist = 303m } @>

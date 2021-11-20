@@ -10,6 +10,7 @@
 
 open FSharp.Data
 open Swensen.Unquote
+open Xunit
 open FSharpx.Control
 
 let grouveeCsvPath =

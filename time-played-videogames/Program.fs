@@ -38,14 +38,15 @@ let main argv =
                     printfn "Querying HLTB for %s" game.Title
                     let! result = game.Title |> clean |> HowLongToBeatHttp.getHtml
                     printfn "Finished querying HLTB for %s" game.Title
-                    return result
+                    return game, result
                 })
         |> Async.ParallelWithThrottle 10
         |> Async.RunSynchronously
 
-    let parsed =
+    let matches =
         responses
-        |> Seq.map HowLongToBeatParsing.parseSearchResult
+        |> Seq.map (fun (game, searchResult) -> (game, HowLongToBeatParsing.parseSearchResult searchResult))
+        |> Seq.map (fun (game, searchResults) -> (game, Matcher.findMatch game searchResults))
         |> Seq.toList
 
     printfn "Wow, you completed %d games! You badass!" (finishedGames |> Seq.length)

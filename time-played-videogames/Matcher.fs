@@ -6,9 +6,9 @@ let cleanWith whitelist title =
     |> Option.defaultValue title
 
 let findMatch
-    (
-        game: Grouvee.GrouveeGame,
-        searchResponses: HowLongToBeatParsing.SearchResult list
-    ) : HowLongToBeatParsing.SearchResult =
-    let closestMatch = searchResponses.[0]
+    (game: Grouvee.GrouveeGame)
+    (searchResponses: HowLongToBeatParsing.SearchResult seq)
+    : HowLongToBeatParsing.SearchResult =
+
+    let closestMatch = searchResponses |> Seq.head
     closestMatch
