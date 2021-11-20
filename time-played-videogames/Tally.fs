@@ -7,7 +7,7 @@ type Tally =
       MainExtras: decimal
       Completionist: decimal }
 
-let tally (results: SearchResult list) =
+let tally (results: SearchResult seq) =
     let initial =
         { MainStory = 0m
           MainExtras = 0m
@@ -35,4 +35,4 @@ let tally (results: SearchResult list) =
                   tally.Completionist
                   + (completionist |> Option.defaultValue 0m) }
 
-    results |> List.fold folder initial
+    results |> Seq.fold folder initial
