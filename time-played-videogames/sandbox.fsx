@@ -86,17 +86,14 @@ let findMatch
 
     printfn "Looking for a match for %s" request.Title
 
-    printfn
-        "Candidates: %A"
-        (searchResponses
-         |> Seq.map (fun r -> r.Title |> clean))
+    printfn "Candidates: %A" (searchResponses |> Seq.map (fun r -> r.Title))
 
     let closestMatch = searchResponses.[0]
     printfn "Closest match (probably?): %s" closestMatch.Title
 
     closestMatch
 
-parsed |> List.map findMatch
+parsed |> List.map findMatch |> ignore
 
 //TODO: matching edge cases
 //Pokemon x/y

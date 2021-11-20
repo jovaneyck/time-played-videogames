@@ -14,8 +14,6 @@ type SearchResult =
       PlayTimes: Playtime list }
 
 let parsePlaytime (text: string) : decimal option =
-    printfn "Parsing: %s" text
-
     let parseHours (text: string) =
         let number =
             text.Split(" Hours").[0].Replace("½", ".5")
@@ -71,7 +69,6 @@ let private parseSearchResultNode (node: HtmlNode) =
         |> Seq.head
 
     let title = a |> HtmlNode.innerText
-    printfn "Parsing: %s" title
 
     let playtimeDivs =
         search_list_details
