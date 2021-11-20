@@ -11,6 +11,7 @@
     <Compile Include="Grouvee.fs" />
     <Compile Include="HowLongToBeatHttp.fs" />
     <Compile Include="HowLongToBeatParsing.fs" />
+    <Compile Include="Matcher.fs" />
     <Compile Include="Test.fs" />
     <Compile Include="Program.fs" />
     <None Include="sandbox.fsx" />

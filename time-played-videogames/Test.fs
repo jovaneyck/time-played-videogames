@@ -159,3 +159,14 @@ module HLTBTests =
             <div class='clear'></div>"
 
         test <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [] @>
+
+module ScrubbingTests =
+    let mapOf l = l |> Map.ofList
+
+    [<Fact>]
+    let ``Scrubs dirty titles`` () =
+        test <@ Matcher.cleanWith (mapOf [ ("dirty", "clean!") ]) "dirty" = "clean!" @>
+
+    [<Fact>]
+    let ``Leaves already clean titles intact`` () =
+        test <@ Matcher.cleanWith (mapOf [ ("dirty", "clean") ]) ":clean:title:" = ":clean:title:" @>

@@ -6,6 +6,7 @@
 #load "Grouvee.fs"
 #load "HowLongToBeatHttp.fs"
 #load "HowLongToBeatParsing.fs"
+#load "Matcher.fs"
 
 open FSharp.Data
 open Swensen.Unquote
@@ -22,21 +23,7 @@ let finishedGames =
 
 finishedGames |> Seq.length
 
-let cleanWith whitelist title =
-    whitelist
-    |> Map.tryFind title
-    |> Option.defaultValue title
-
 let clean (title: string) =
-    //title
-    //    .Replace("/", " ")
-    //    .Replace(" III", " 3")
-    //    .Replace(" II", " 2")
-    //    .Replace("•", "  ")
-    //    .Replace(" – ", "  ")
-    //    .Replace("û", "u")
-    //    .Replace(":", " ")
-
     let whitelist =
         [ ("Pokémon: Let's Go, Pikachu!/Eevee!", "Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!")
           ("Pokémon X/Y", "Pokémon X and Y")
@@ -53,12 +40,7 @@ let clean (title: string) =
           ("Abzû", "ABZU") ]
         |> Map.ofList
 
-    cleanWith whitelist title
-
-let mapOf l = l |> Map.ofList
-
-test <@ cleanWith (mapOf [ ("dirty", "clean") ]) ":clean:title:" = ":clean:title:" @>
-test <@ cleanWith (mapOf [ ("dirty", "clean!") ]) "dirty" = "clean!" @>
+    Matcher.cleanWith whitelist title
 
 let responses =
     finishedGames
@@ -66,7 +48,9 @@ let responses =
         (fun game ->
             async {
                 printfn "Querying HLTB for %s" game.Title
+
                 let! result = game.Title |> clean |> HowLongToBeatHttp.getHtml
+
                 printfn "Finished querying HLTB for %s" game.Title
                 return game, result
             })
@@ -78,24 +62,4 @@ let parsed =
     |> Seq.map (fun (req, resp) -> req, HowLongToBeatParsing.parseSearchResult resp)
     |> Seq.toList
 
-let findMatch
-    (
-        request: Grouvee.GrouveeGame,
-        searchResponses: HowLongToBeatParsing.SearchResult list
-    ) : HowLongToBeatParsing.SearchResult =
-
-    printfn "Looking for a match for %s" request.Title
-
-    printfn "Candidates: %A" (searchResponses |> Seq.map (fun r -> r.Title))
-
-    let closestMatch = searchResponses.[0]
-    printfn "Closest match (probably?): %s" closestMatch.Title
-
-    closestMatch
-
-parsed |> List.map findMatch |> ignore
-
-//TODO: matching edge cases
-//Pokemon x/y
-//Doom 93/2016
-//RDRII fails BUT FFXIII, Ni no Kuni II: Revenant Kingdom fails with digits instead of roman numerals
+parsed |> List.map Matcher.findMatch |> ignore
