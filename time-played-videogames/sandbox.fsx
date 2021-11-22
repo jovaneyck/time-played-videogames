@@ -8,7 +8,6 @@
 #load "HowLongToBeatParsing.fs"
 #load "Matcher.fs"
 
-open FSharp.Data
 open Swensen.Unquote
 open Xunit
 open FSharpx.Control
@@ -45,6 +44,7 @@ let clean (title: string) =
 
 let responses =
     finishedGames
+    |> List.take 10
     |> List.map
         (fun game ->
             async {
@@ -63,4 +63,6 @@ let parsed =
     |> Seq.map (fun (req, resp) -> req, HowLongToBeatParsing.parseSearchResult resp)
     |> Seq.toList
 
-parsed |> List.map Matcher.findMatch |> ignore
+parsed
+|> List.map (fun (game, results) -> game, Matcher.findMatch game results)
+|> ignore
