@@ -13,26 +13,19 @@ let tally (results: SearchResult seq) =
           MainExtras = 0m
           Completionist = 0m }
 
-    let folder tally searchresult =
-        let (_, main) =
-            searchresult.PlayTimes
-            |> List.find (fun (cat, _) -> cat = MainStory)
-
-        let (_, mainExtras) =
-            searchresult.PlayTimes
-            |> List.find (fun (cat, _) -> cat = MainExtras)
-
-        let (_, completionist) =
-            searchresult.PlayTimes
-            |> List.find (fun (cat, _) -> cat = Completionist)
-
+    let folder tally searchresult : Tally =
         { tally with
-              MainStory = tally.MainStory + (main |> Option.defaultValue 0m)
+              MainStory =
+                  tally.MainStory
+                  + (searchresult.PlayTimes.MainStory
+                     |> Option.defaultValue 0m)
               MainExtras =
                   tally.MainExtras
-                  + (mainExtras |> Option.defaultValue 0m)
+                  + (searchresult.PlayTimes.MainExtras
+                     |> Option.defaultValue 0m)
               Completionist =
                   tally.Completionist
-                  + (completionist |> Option.defaultValue 0m) }
+                  + (searchresult.PlayTimes.Completionist
+                     |> Option.defaultValue 0m) }
 
     results |> Seq.fold folder initial

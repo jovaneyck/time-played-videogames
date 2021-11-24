@@ -29,7 +29,6 @@ let main argv =
     let finishedGames =
         games
         |> List.filter (fun g -> g.Shelf = Grouvee.Shelf.Played)
-        |> List.take 10
 
     let responses =
         finishedGames
@@ -52,7 +51,6 @@ let main argv =
 
     let totalTimes = matches |> List.map snd |> Tally.tally
 
-    printf
-        $"Wow, you completed {(finishedGames |> Seq.length)} games! You spent {totalTimes} hours playing videogames. Wow."
+    printf $"Wow, you completed {(finishedGames |> Seq.length)} games! You spent {0} hours playing videogames. Wow."
 
     0

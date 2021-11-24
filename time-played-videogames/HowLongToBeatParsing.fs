@@ -7,11 +7,15 @@ type Category =
     | MainExtras
     | Completionist
 
+type Playtimes =
+    { MainStory: decimal option
+      MainExtras: decimal option
+      Completionist: decimal option }
+
+//TODO: remove me?
 type Playtime = (Category * decimal option)
 
-type SearchResult =
-    { Title: string
-      PlayTimes: Playtime list }
+type SearchResult = { Title: string; PlayTimes: Playtimes }
 
 let parsePlaytime (text: string) : decimal option =
     let parseHours (text: string) =
@@ -79,8 +83,22 @@ let private parseSearchResultNode (node: HtmlNode) =
         playtimeDivs
         |> Seq.toList
         |> List.map (List.ofArray >> parsePlaytimeDiv)
+        |> Map.ofList
 
-    { Title = title; PlayTimes = playtimes }
+    { Title = title
+      PlayTimes =
+          { MainStory =
+                playtimes
+                |> Map.tryFind MainStory
+                |> Option.defaultValue None
+            MainExtras =
+                playtimes
+                |> Map.tryFind MainExtras
+                |> Option.defaultValue None
+            Completionist =
+                playtimes
+                |> Map.tryFind Completionist
+                |> Option.defaultValue None } }
 
 let parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) : SearchResult list =
     if html.Contains("No results for ") then

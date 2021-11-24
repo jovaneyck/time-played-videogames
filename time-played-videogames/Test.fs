@@ -90,21 +90,21 @@ module HLTBTests =
         test
             <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [ { Title = "Darksiders III"
                                                                                    PlayTimes =
-                                                                                       [ (MainStory, Some 14M)
-                                                                                         (MainExtras, Some 18.5M)
-                                                                                         (Completionist, Some 30M) ] }
+                                                                                       { MainStory = Some 14M
+                                                                                         MainExtras = Some 18.5M
+                                                                                         Completionist = Some 30M } }
                                                                                  { Title =
                                                                                        "Darksiders III - The Crucible"
                                                                                    PlayTimes =
-                                                                                       [ (MainStory, Some 1.5M)
-                                                                                         (MainExtras, Some 1.5M)
-                                                                                         (Completionist, Some 2M) ] }
+                                                                                       { MainStory = Some 1.5M
+                                                                                         MainExtras = Some 1.5M
+                                                                                         Completionist = Some 2M } }
                                                                                  { Title =
                                                                                        "Darksiders III - Keepers of the Void"
                                                                                    PlayTimes =
-                                                                                       [ (MainStory, Some 4M)
-                                                                                         (MainExtras, Some 4M)
-                                                                                         (Completionist, Some 4.5M) ] } ] @>
+                                                                                       { MainStory = Some 4M
+                                                                                         MainExtras = Some 4M
+                                                                                         Completionist = Some 4.5M } } ] @>
 
     [<Fact>]
     let ``Parsing HLTB responses with empty playtimes`` () =
@@ -147,9 +147,9 @@ module HLTBTests =
             <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [ { Title =
                                                                                        "The Legend of Zelda: Breath of the Wild 2"
                                                                                    PlayTimes =
-                                                                                       [ (MainStory, None)
-                                                                                         (MainExtras, None)
-                                                                                         (Completionist, None) ] } ] @>
+                                                                                       { MainStory = None
+                                                                                         MainExtras = None
+                                                                                         Completionist = None } } ] @>
 
     [<Fact>]
     let ``Parsing HLTB responses with no results for a game`` () =
@@ -159,6 +159,45 @@ module HLTBTests =
             <div class='clear'></div>"
 
         test <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [] @>
+
+    [<Fact>]
+    let ``Parsing HLTB responses with missing playtime categories`` () =
+        let html =
+            "<div class=\"global_padding shadow_box back_blue center\">
+        <h3> We Found 2 Games for \"Just Cause 2\" </h3>
+</div>
+
+<ul>
+        <li class=\"back_darkish\"
+            style=\"background-image:linear-gradient(rgb(70, 70, 70), rgba(70, 70, 70, 0.9)), url('/games/JustCause2MultiplayerMod.jpg')\">
+            <div class=\"search_list_image\">
+                <a aria-label=\"Just Cause 2 Multiplayer Mod\" title=\"Just Cause 2 Multiplayer Mod\" href=\"game?id=18305\">
+                    <img alt=\"Box Art\" src=\"/games/JustCause2MultiplayerMod.jpg\" />
+                </a>
+            </div>
+            <div class=\"search_list_details\">
+                <h3 class=\"shadow_text\">
+                    <a class=\"text_white\" title=\"Just Cause 2 Multiplayer Mod\" href=\"game?id=18305\">Just Cause 2:
+                        Multiplayer Mod</a>
+                </h3>
+                <div class=\"search_list_details_block\">
+                    <div class=\"search_list_tidbit_short text_white shadow_text\">Co-Op</div>
+                    <div class=\"search_list_tidbit_long center time_40\">26&#189; Hours </div>
+                    <div class=\"search_list_tidbit_short text_white shadow_text\">Vs.</div>
+                    <div class=\"search_list_tidbit_long center time_40\">57 Hours </div>
+                </div>
+            </div>
+        </li>
+        <div class=\"clear\"></div>
+</ul>"
+
+        test
+            <@ parseSearchResult (HowLongToBeatHttp.HttpSearchResponse html) = [ { Title =
+                                                                                       "Just Cause 2: Multiplayer Mod"
+                                                                                   PlayTimes =
+                                                                                       { MainStory = None
+                                                                                         MainExtras = None
+                                                                                         Completionist = None } } ] @>
 
 module ScrubbingTests =
     let mapOf l = l |> Map.ofList
@@ -187,24 +226,24 @@ module TallyTests =
         test
             <@ tally [ { Title = ":a:game:"
                          PlayTimes =
-                             [ (MainStory, Some 1m)
-                               (MainExtras, Some 2m)
-                               (Completionist, Some 3m) ] } ] = { MainStory = 1m
-                                                                  MainExtras = 2m
-                                                                  Completionist = 3m } @>
+                             { MainStory = Some 1m
+                               MainExtras = Some 2m
+                               Completionist = Some 3m } } ] = { MainStory = 1m
+                                                                 MainExtras = 2m
+                                                                 Completionist = 3m } @>
 
     [<Fact>]
     let ``Can tally up a collection consisting of multiple games`` () =
         test
             <@ tally [ { Title = ":a:game:"
                          PlayTimes =
-                             [ (MainStory, Some 1m)
-                               (MainExtras, Some 2m)
-                               (Completionist, Some 3m) ] }
+                             { MainStory = Some 1m
+                               MainExtras = Some 2m
+                               Completionist = Some 3m } }
                        { Title = ":another:game:"
                          PlayTimes =
-                             [ (MainStory, Some 100m)
-                               (MainExtras, Some 200m)
-                               (Completionist, Some 300m) ] } ] = { MainStory = 101m
-                                                                    MainExtras = 202m
-                                                                    Completionist = 303m } @>
+                             { MainStory = Some 100m
+                               MainExtras = Some 200m
+                               Completionist = Some 300m } } ] = { MainStory = 101m
+                                                                   MainExtras = 202m
+                                                                   Completionist = 303m } @>
