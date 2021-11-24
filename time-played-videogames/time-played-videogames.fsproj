@@ -13,7 +13,9 @@
     <Compile Include="HowLongToBeatParsing.fs" />
     <Compile Include="Matcher.fs" />
     <Compile Include="Tally.fs" />
-    <Compile Include="Test.fs" />
+    <Compile Include="App.fs" />
+    <Compile Include="tests\Test.fs" />
+    <Compile Include="tests\EndToEndTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="sandbox.fsx" />
   </ItemGroup>
