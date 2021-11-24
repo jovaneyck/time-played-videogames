@@ -247,3 +247,39 @@ module TallyTests =
                                Completionist = Some 300m } } ] = { MainStory = 101m
                                                                    MainExtras = 202m
                                                                    Completionist = 303m } @>
+
+    [<Fact>]
+    let ``Can tally up a collection with games with missing categories. The missing category is completionist (perfectly reasonable scenario)``
+        ()
+        =
+        test
+            <@ tally [ { Title = ":a:game:"
+                         PlayTimes =
+                             { MainStory = Some 1m
+                               MainExtras = Some 2m
+                               Completionist = None } } ] = { MainStory = 1m
+                                                              MainExtras = 2m
+                                                              Completionist = 2m } @>
+
+
+    [<Fact>]
+    let ``Can tally up a collection with games with missing categories. The missing cateogry is main and extras`` () =
+        test
+            <@ tally [ { Title = ":a:game:"
+                         PlayTimes =
+                             { MainStory = Some 1m
+                               MainExtras = None
+                               Completionist = Some 3m } } ] = { MainStory = 1m
+                                                                 MainExtras = 1m
+                                                                 Completionist = 3m } @>
+
+    [<Fact>]
+    let ``Can tally up a collection with games with missing categories. The missing cateogry is mainstory (gasp)`` () =
+        test
+            <@ tally [ { Title = ":a:game:"
+                         PlayTimes =
+                             { MainStory = None
+                               MainExtras = Some 2m
+                               Completionist = Some 3m } } ] = { MainStory = 0m
+                                                                 MainExtras = 2m
+                                                                 Completionist = 3m } @>
