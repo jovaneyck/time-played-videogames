@@ -1,7 +1,5 @@
 ﻿module Main
 
-open FSharpx.Control
-
 let clean (title: string) =
     let whitelist =
         [ ("Pokémon: Let's Go, Pikachu!/Eevee!", "Pokémon: Let's Go, Pikachu! and Let's Go, Eevee!")
@@ -26,6 +24,6 @@ let main argv =
     let grouveeCsvPath = argv.[0]
     let finishedGames, tally = App.run clean grouveeCsvPath
 
-    printf $"Wow, you completed {(finishedGames |> Seq.length)} games! You spent {0} hours playing videogames. Wow."
+    printf $"Wow, you completed {(finishedGames |> Seq.length)} games! You spent {tally} hours playing videogames. Wow."
 
     0
