@@ -18,6 +18,9 @@
     <Compile Include="tests\EndToEndTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="sandbox.fsx" />
+    <None Include="tests\e2e-grouvee.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
