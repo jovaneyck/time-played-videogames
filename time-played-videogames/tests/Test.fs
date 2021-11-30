@@ -283,3 +283,14 @@ module TallyTests =
                                Completionist = Some 3m } } ] = { MainStory = 0m
                                                                  MainExtras = 2m
                                                                  Completionist = 3m } @>
+
+    [<Fact>]
+    let ``Can tally up a collection with games with multiple missing categories.`` () =
+        test
+            <@ tally [ { Title = ":a:game:"
+                         PlayTimes =
+                             { MainStory = Some 4m
+                               MainExtras = None
+                               Completionist = None } } ] = { MainStory = 4m
+                                                              MainExtras = 4m
+                                                              Completionist = 4m } @>
