@@ -23,7 +23,9 @@ let clean (title: string) =
 let main argv =
     let grouveeCsvPath = argv.[0]
     let finishedGames, tally = App.run clean grouveeCsvPath
+    let inDays = tally.MainExtras / 24m
 
-    printf $"Wow, you completed {(finishedGames |> Seq.length)} games! You spent {tally} hours playing videogames. Wow."
+    printf
+        $"You completed {(finishedGames |> Seq.length)} games! You spent {inDays |> int} days (that's roughly {tally.MainExtras |> int} hours) playing videogames. Wow."
 
     0
