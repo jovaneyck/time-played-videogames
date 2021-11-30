@@ -12,7 +12,6 @@ type Playtimes =
       MainExtras: decimal option
       Completionist: decimal option }
 
-//TODO: remove me?
 type Playtime = (Category * decimal option)
 
 type SearchResult = { Title: string; PlayTimes: Playtimes }
