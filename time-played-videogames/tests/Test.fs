@@ -215,7 +215,7 @@ module TallyTests =
     open Tally
 
     [<Fact>]
-    let ``Can tally up an empty`` () =
+    let ``Can tally up an empty collection`` () =
         test
             <@ tally [] = { MainStory = 0m
                             MainExtras = 0m
